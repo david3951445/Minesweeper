@@ -90,7 +90,6 @@ namespace Minesweeper
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             isMouseLeftButtonDown = true;
-
             if (sender is Image image) {
                 clickedImage = image;
             }

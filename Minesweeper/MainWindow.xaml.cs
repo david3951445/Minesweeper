@@ -38,18 +38,22 @@ namespace Minesweeper
         private void restartButton_Click(object sender, RoutedEventArgs e) {
             Restart();
         }
-
         private void Restart() {
             int boardSize = (int)boardSizeSlider.Value;
             int mineCount = (int)mineCountSlider.Value;
 
             // Create mine board
             mineBoard = new MineBoard(boardSize, mineCount);
+            mineBoard.OnGameOvered += () => gameMessageTextBox.Visibility = Visibility.Visible;
+            mineBoard.isGameOver = false;
             mineBoardUI = new MineBoardUI(mineBoard);
 
             // Add mine board to root grid
             Grid.SetRow(mineBoardUI.grid, 1);
             rootGrid.Children.Add(mineBoardUI.grid);
+
+            // 
+            gameMessageTextBox.Visibility = Visibility.Hidden;
         }
     }
 }

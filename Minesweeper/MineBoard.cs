@@ -19,6 +19,14 @@ namespace Minesweeper
         private int mineCount = 10;
         public GridElement[,] gridElements;
         public GridElement.Type[,] answer;
+        public Action OnGameOvered;
+        private bool _isGameOver;
+        public bool isGameOver {
+            get => _isGameOver;
+            set {
+                _isGameOver = value;
+            }
+        }
 
         public event EventHandler<MyEventArgs> onGridElementTypeChanged;
         public class MyEventArgs : EventArgs
@@ -26,12 +34,11 @@ namespace Minesweeper
             public Coords coord;
         }
 
-        public MineBoard(int _width, int _mineCount) {
+        public MineBoard(int _width, int _mineCount) {          
             width = _width;
             height = _width;
             mineCount = _mineCount;
             GenerateAnswer();
-
             gridElements = Create2DArrayWithInitialValue(width, height, new GridElement(GridElement.Type.Cover));
             
         }
@@ -104,44 +111,51 @@ namespace Minesweeper
         }
 
         public void Reveal(Coords coord) {
-            switch (gridElements[coord.row, coord.col].type) {
+            if (!isGameOver) {
+                switch (gridElements[coord.row, coord.col].type) {
+                    case GridElement.Type.Empty:
+                        // ExtendConnectedEmpty();
+                        break;
+                    case GridElement.Type.One:
+                    case GridElement.Type.Two:
+                    case GridElement.Type.Three:
+                    case GridElement.Type.Four:
+                    case GridElement.Type.Five:
+                    case GridElement.Type.Six:
+                    case GridElement.Type.Seven:
+                    case GridElement.Type.Eight:
+                        // RevealSurrounding();
+                        break;                     
+                    case GridElement.Type.Cover: // Show answer below
+                        gridElements[coord.row, coord.col].type = answer[coord.row, coord.col];
+                        onGridElementTypeChanged.Invoke(this, new MyEventArgs() { coord = coord });
 
-                case GridElement.Type.One:
-                case GridElement.Type.Two:
-                case GridElement.Type.Three:
-                case GridElement.Type.Four:
-                case GridElement.Type.Five:
-                case GridElement.Type.Six:
-                case GridElement.Type.Seven:
-                case GridElement.Type.Eight:                      
-                    // Reveal surrounding
-                    break;
-                case GridElement.Type.Mine:
-                    break;
-                case GridElement.Type.Cover:
-                    gridElements[coord.row, coord.col].type = answer[coord.row, coord.col];
-                    onGridElementTypeChanged.Invoke(this, new MyEventArgs() { coord = coord });
-                    break;
-                default:
-                    break;
-            }
-            if (gridElements[coord.row, coord.col].type != GridElement.Type.Flag) {
-                
+                        if (gridElements[coord.row, coord.col].type == GridElement.Type.Mine) {
+                            isGameOver = true;
+                            OnGameOvered.Invoke();
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         public void Flag(Coords coord) {
-            switch (gridElements[coord.row, coord.col].type) {
-                case GridElement.Type.Flag:
-                    gridElements[coord.row, coord.col].type = GridElement.Type.Cover;
-                    break;
-                case GridElement.Type.Cover:
-                    gridElements[coord.row, coord.col].type = GridElement.Type.Flag;
-                    break;
-                default:
-                    break;
+            if (!isGameOver) {
+                switch (gridElements[coord.row, coord.col].type) {
+                    case GridElement.Type.Flag:
+                        gridElements[coord.row, coord.col].type = GridElement.Type.Cover;
+                        break;
+                    case GridElement.Type.Cover:
+                        gridElements[coord.row, coord.col].type = GridElement.Type.Flag;
+                        // flagCounter--;
+                        break;
+                    default:
+                        break;
+                }
+                onGridElementTypeChanged.Invoke(this, new MyEventArgs() { coord = coord });
             }
-            onGridElementTypeChanged.Invoke(this, new MyEventArgs() { coord = coord });
         }
     }
 }

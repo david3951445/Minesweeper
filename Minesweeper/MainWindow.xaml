@@ -24,5 +24,6 @@
             <TextBlock Text="Mine count" Background="#FF4C4C4C" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White"/>
             <Slider x:Name="mineCountSlider" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0" ValueChanged="Slider_ValueChanged" Minimum="10" Maximum="20"/>
         </StackPanel>
+        <TextBox x:Name="gameMessageTextBox" HorizontalAlignment="Center" Margin="0,50,0,0" TextWrapping="Wrap" Text="Game Over!" VerticalAlignment="Top" Width="110" Grid.Row="1" Height="20"/>
     </Grid>
 </Window>
