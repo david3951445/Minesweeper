@@ -1,0 +1,28 @@
+﻿<Window x:Class="Minesweeper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Minesweeper"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="900" Width="800">
+    <Grid x:Name="rootGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="800"/>
+        </Grid.RowDefinitions>
+        <Rectangle Grid.Row="1" Fill="#FFB6CDFB" />
+        <StackPanel Margin="5,5,610,39" Background="#FF757575" >
+            <TextBlock Text="Board size" Background="#FF4C4C4C" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White"/>
+            <Slider x:Name="boardSizeSlider" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0" ValueChanged="Slider_ValueChanged" Minimum="10" Maximum="20"/>
+        </StackPanel>
+        <Button x:Name="restartButton" Content="Restart" HorizontalAlignment="Left" Margin="721,26,0,0" VerticalAlignment="Top" Click="restartButton_Click" FontSize="16" Background="#FF866969" Foreground="White"/>
+        <StackPanel Margin="195,5,420,39" Background="#FF757575" >
+            <TextBlock Text="Mine count" Background="#FF4C4C4C" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White"/>
+            <Slider x:Name="mineCountSlider" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0" ValueChanged="Slider_ValueChanged" Minimum="10" Maximum="20"/>
+        </StackPanel>
+    </Grid>
+</Window>
