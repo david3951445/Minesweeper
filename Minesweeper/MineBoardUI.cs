@@ -15,17 +15,17 @@ namespace Minesweeper
     class MineBoardUI
     {
         private MineBoard _mineBoard;
-        public MineBoard mineBoard {
+        private MineBoard mineBoard {
             get => _mineBoard;
             set {
                 _mineBoard = value;
-                _mineBoard.onGridElementTypeChanged += _mineBoard_onGridElementTypeChanged;
+                _mineBoard.OnGridElementTypeChanged += _mineBoard_onGridElementTypeChanged;
             }
         }
 
         bool isMouseLeftButtonDown = false; // Need to change to "bool[,] isMouseLeftButtonDowns" so that each image has its own checking
         public Grid grid; // For storing GridElementUI
-        private Image clickedImage;
+        private Image? clickedImage;
         private double gridSize = 40f;
 
         public MineBoardUI(MineBoard mineBoard) {
@@ -45,8 +45,9 @@ namespace Minesweeper
             // Add image to grid
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
-                    //GridElementUI gridElementUI = new GridElementUI(mineBoard.gridElements[i, j]);
                     string path = GridElement.GetImgRelativePath(GridElement.Type.Cover);
+
+                    // Use image as UI of GridElement and handle the mouse event
                     Image image = UtilsClass.CreateImage(path, UriKind.Relative);
                     image.MouseLeftButtonDown += Image_MouseLeftButtonDown;
                     image.MouseLeftButtonUp += Image_MouseLeftButtonUp;
@@ -58,7 +59,7 @@ namespace Minesweeper
         }
 
 
-        private void _mineBoard_onGridElementTypeChanged(object sender, MineBoard.MyEventArgs e) {
+        private void _mineBoard_onGridElementTypeChanged(object? sender, Coords coord) {
             // Refresh
             for (int i = 0; i < mineBoard.width; i++) {
                 for (int j = 0; j < mineBoard.width; j++) {
@@ -101,10 +102,6 @@ namespace Minesweeper
                 mineBoard.Flag(elementCoord);
             }
             
-        }
-
-        private void Refresh() {
-
         }
     }
 }

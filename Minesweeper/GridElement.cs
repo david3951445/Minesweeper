@@ -61,5 +61,20 @@ namespace Minesweeper
             Mine,
             Cover
         }
+        public static bool IsNumberType(Type type) {
+            switch (type) {
+                case Type.One:
+                case Type.Two:
+                case Type.Three:
+                case Type.Four:
+                case Type.Five:
+                case Type.Six:
+                case Type.Seven:
+                case Type.Eight:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

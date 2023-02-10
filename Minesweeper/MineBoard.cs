@@ -19,28 +19,44 @@ namespace Minesweeper
         private int mineCount = 10;
         public GridElement[,] gridElements;
         public GridElement.Type[,] answer;
-        public Action OnGameOvered;
+
+        public Action? OnGameOvered;
+        public Action? OnGameWinned;
+        public event EventHandler<int>? OnFlagCounterChanged;
+
         private bool _isGameOver;
-        public bool isGameOver {
+        private bool isGameOver {
             get => _isGameOver;
             set {
                 _isGameOver = value;
             }
         }
-
-        public event EventHandler<MyEventArgs> onGridElementTypeChanged;
-        public class MyEventArgs : EventArgs
-        {   
-            public Coords coord;
+        private int _flagCounter;
+        public int flagCounter {
+            get => _flagCounter;
+            set {
+                _flagCounter = value;
+                OnFlagCounterChanged?.Invoke(this, _flagCounter);
+                if (_flagCounter == 0) {
+                    OnGameWinned?.Invoke();
+                }
+            }
         }
 
-        public MineBoard(int _width, int _mineCount) {          
+        public event EventHandler<Coords>? OnGridElementTypeChanged;
+
+        public MineBoard(int _width, int _mineCount) {
             width = _width;
             height = _width;
             mineCount = _mineCount;
+            isGameOver = false;
+
+            answer = UtilsClass.Create2DArrayWithInitialValue(width, height, GridElement.Type.Empty);
             GenerateAnswer();
+
             gridElements = Create2DArrayWithInitialValue(width, height, new GridElement(GridElement.Type.Cover));
-            
+
+
         }
 
         private GridElement[,] Create2DArrayWithInitialValue(int numRows, int numCols, GridElement value) {
@@ -58,9 +74,7 @@ namespace Minesweeper
             return elements;
         }
 
-        private void GenerateAnswer() {
-            answer = UtilsClass.Create2DArrayWithInitialValue(width, height, GridElement.Type.Empty);
-  
+        private void GenerateAnswer() {          
             // Generate Mines
             Stack<Coords> mines = UtilsClass.PickRandomNumbers2D(new Coords(height, width), mineCount);
             while (mines.Any()) {
@@ -114,8 +128,9 @@ namespace Minesweeper
             if (!isGameOver) {
                 switch (gridElements[coord.row, coord.col].type) {
                     case GridElement.Type.Empty:
-                        // ExtendConnectedEmpty();
+
                         break;
+
                     case GridElement.Type.One:
                     case GridElement.Type.Two:
                     case GridElement.Type.Three:
@@ -125,20 +140,62 @@ namespace Minesweeper
                     case GridElement.Type.Seven:
                     case GridElement.Type.Eight:
                         // RevealSurrounding();
-                        break;                     
+                        break; 
+                        
                     case GridElement.Type.Cover: // Show answer below
-                        gridElements[coord.row, coord.col].type = answer[coord.row, coord.col];
-                        onGridElementTypeChanged.Invoke(this, new MyEventArgs() { coord = coord });
-
-                        if (gridElements[coord.row, coord.col].type == GridElement.Type.Mine) {
+                        if (answer[coord.row, coord.col] == GridElement.Type.Mine) {
+                            SetGridElementsToAnswer();
                             isGameOver = true;
-                            OnGameOvered.Invoke();
+                            OnGameOvered?.Invoke();
                         }
+                        else {
+                            ExtendConnectedEmpty(coord);
+                        }
+
+                        OnGridElementTypeChanged?.Invoke(this, coord);
+                    
                         break;
+
                     default:
                         break;
                 }
             }
+        }
+
+        private void SetGridElementsToAnswer() {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    gridElements[i, j].type = answer[i, j];
+                }
+            }
+        }
+
+        private void ExtendConnectedEmpty(Coords coord) {
+            if (!IsInBound(coord)) {
+                return;
+            }
+
+            if (GridElement.IsNumberType(answer[coord.row, coord.col])) {
+                gridElements[coord.row, coord.col].type = answer[coord.row, coord.col];
+                return;
+            }
+
+            if (answer[coord.row, coord.col] == GridElement.Type.Empty) {
+                if (gridElements[coord.row, coord.col].type != GridElement.Type.Cover) {
+                    return;
+                }
+
+                gridElements[coord.row, coord.col].type = answer[coord.row, coord.col];
+                ExtendConnectedEmpty(coord + Coords.up);
+                ExtendConnectedEmpty(coord + new Coords(-1, 1));
+                ExtendConnectedEmpty(coord + Coords.right);
+                ExtendConnectedEmpty(coord + new Coords(1, 1));
+                ExtendConnectedEmpty(coord + Coords.down);
+                ExtendConnectedEmpty(coord + new Coords(1, -1));
+                ExtendConnectedEmpty(coord + Coords.left);
+                ExtendConnectedEmpty(coord + new Coords(-1, -1));
+            }
+            return;
         }
 
         public void Flag(Coords coord) {
@@ -146,15 +203,16 @@ namespace Minesweeper
                 switch (gridElements[coord.row, coord.col].type) {
                     case GridElement.Type.Flag:
                         gridElements[coord.row, coord.col].type = GridElement.Type.Cover;
+                        flagCounter++;
                         break;
                     case GridElement.Type.Cover:
                         gridElements[coord.row, coord.col].type = GridElement.Type.Flag;
-                        // flagCounter--;
+                        flagCounter--;
                         break;
                     default:
                         break;
                 }
-                onGridElementTypeChanged.Invoke(this, new MyEventArgs() { coord = coord });
+                OnGridElementTypeChanged?.Invoke(this, coord);
             }
         }
     }

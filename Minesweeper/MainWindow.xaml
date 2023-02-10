@@ -16,14 +16,22 @@
         </Grid.RowDefinitions>
         <Rectangle Grid.Row="1" Fill="#FFB6CDFB" />
         <StackPanel Margin="5,5,610,39" Background="#FF757575" >
-            <TextBlock Text="Board size" Background="#FF4C4C4C" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White"/>
+            <TextBlock Background="#FF4C4C4C" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White"><Run Text="Board "/><Run Language="zh-tw" Text="S"/><Run Text="ize"/></TextBlock>
             <Slider x:Name="boardSizeSlider" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0" ValueChanged="Slider_ValueChanged" Minimum="10" Maximum="20"/>
         </StackPanel>
         <Button x:Name="restartButton" Content="Restart" HorizontalAlignment="Left" Margin="721,26,0,0" VerticalAlignment="Top" Click="restartButton_Click" FontSize="16" Background="#FF866969" Foreground="White"/>
         <StackPanel Margin="195,5,420,39" Background="#FF757575" >
-            <TextBlock Text="Mine count" Background="#FF4C4C4C" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White"/>
+            <TextBlock Background="#FF4C4C4C" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White"><Run Text="Mine "/><Run Language="zh-tw" Text="C"/><Run Text="ount"/></TextBlock>
             <Slider x:Name="mineCountSlider" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0" ValueChanged="Slider_ValueChanged" Minimum="10" Maximum="20"/>
         </StackPanel>
-        <TextBox x:Name="gameMessageTextBox" HorizontalAlignment="Center" Margin="0,50,0,0" TextWrapping="Wrap" Text="Game Over!" VerticalAlignment="Top" Width="110" Grid.Row="1" Height="20"/>
+        <StackPanel Margin="400,5,330,39" Background="#FFA7A7A7" >
+            <TextBlock Text="Time" Background="#FF6B6B6B" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White"/>
+            <TextBox x:Name="timeTextBox" TextAlignment="Center" TextWrapping="Wrap" Text="0s" Width="32" Background="#FF6B6B6B" Foreground="White"/>
+        </StackPanel>
+        <TextBox x:Name="gameMessageTextBox" HorizontalAlignment="Left" Margin="400,75,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="110" Height="20" Background="#FF8E8E8E" Foreground="White"/>
+        <StackPanel Margin="475,5,255,39" Background="#FFA7A7A7" >
+            <TextBlock Background="#FF6B6B6B" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White" Text="Flag"/>
+            <TextBox x:Name="flagTextBox" TextAlignment="Center" TextWrapping="Wrap" Text="?" Width="32" Background="#FF6B6B6B" Foreground="White"/>
+        </StackPanel>
     </Grid>
 </Window>
