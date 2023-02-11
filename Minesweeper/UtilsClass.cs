@@ -58,17 +58,16 @@ namespace Minesweeper
         /// <returns></returns>
         static public Coords GetChildCoordInGrid(UIElement element) {
             return new Coords(Grid.GetRow(element), Grid.GetColumn(element));
-        }      
-
-        static public T[,] Create2DArrayWithInitialValue<T>(int numRows, int numCols, T value) {
-            T[,] array2D = new T[numRows, numCols];
-            for (int i = 0; i < numRows; i++) {
-                for (int j = 0; j < numCols; j++) {
-                    array2D[i, j] = value;
-                }
-            }
-            return array2D;
         }
+
+        /// <summary>
+        /// Given row and col, init 2D array with same value (value type)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="numRows"></param>
+        /// <param name="numCols"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
 
         static public void Fill2DArray<T>(T[,] array2D, T value) {
             int numRows = array2D.GetLength(0);

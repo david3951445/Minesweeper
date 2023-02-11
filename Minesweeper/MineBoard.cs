@@ -14,15 +14,16 @@ namespace Minesweeper
 {
     class MineBoard 
     {
-        public int width { get; private set; }
-        public int height { get; private set; }
+        public int height { get; private set; } // Number of col of board
+        public int width { get; private set; } // Number of row of board
         private int mineCount = 10;
-        public GridElement[,] gridElements;
-        public GridElement.Type[,] answer;
+        public GridElement[,] gridElements; // Store the state of elements in grid
+        public GridElement.Type[,] answer; // Answer of mine board
 
         public Action? OnGameOvered;
         public Action? OnGameWinned;
         public event EventHandler<int>? OnFlagCounterChanged;
+        public event EventHandler<Coords>? OnGridElementTypeChanged;
 
         private bool _isGameOver;
         private bool isGameOver {
@@ -43,35 +44,16 @@ namespace Minesweeper
             }
         }
 
-        public event EventHandler<Coords>? OnGridElementTypeChanged;
-
         public MineBoard(int _width, int _mineCount) {
             width = _width;
             height = _width;
             mineCount = _mineCount;
             isGameOver = false;
-
-            answer = UtilsClass.Create2DArrayWithInitialValue(width, height, GridElement.Type.Empty);
+            answer = GridElement.Type.Empty.RepeatValue(width, height);
             GenerateAnswer();
 
-            gridElements = Create2DArrayWithInitialValue(width, height, new GridElement(GridElement.Type.Cover));
+            gridElements = new GridElement(GridElement.Type.Cover).RepeatObject(width, height);
 
-
-        }
-
-        private GridElement[,] Create2DArrayWithInitialValue(int numRows, int numCols, GridElement value) {
-            // method 1
-            GridElement[,] elements = new GridElement[numRows, numCols];
-            for (int i = 0; i < numRows; i++) {
-                for (int j = 0; j < numCols; j++) {
-                    elements[i, j] = new GridElement(GridElement.Type.Cover);
-                }
-            }
-
-            // method 2 (This will fuck up, Although it is same process with method 1)
-            //elements = UtilsClass.Create2DArrayWithInitialValue(width, height, new GridElement(GridElement.Type.Cover));
-
-            return elements;
         }
 
         private void GenerateAnswer() {          
@@ -128,7 +110,6 @@ namespace Minesweeper
             if (!isGameOver) {
                 switch (gridElements[coord.row, coord.col].type) {
                     case GridElement.Type.Empty:
-
                         break;
 
                     case GridElement.Type.One:
@@ -139,7 +120,9 @@ namespace Minesweeper
                     case GridElement.Type.Six:
                     case GridElement.Type.Seven:
                     case GridElement.Type.Eight:
-                        // RevealSurrounding();
+                        if (isSweepedMinesAround(coord)) {
+                            RevealSurrounding(coord);
+                        }
                         break; 
                         
                     case GridElement.Type.Cover: // Show answer below
@@ -150,16 +133,33 @@ namespace Minesweeper
                         }
                         else {
                             ExtendConnectedEmpty(coord);
-                        }
-
-                        OnGridElementTypeChanged?.Invoke(this, coord);
-                    
+                        }          
                         break;
 
                     default:
                         break;
                 }
+
+                OnGridElementTypeChanged?.Invoke(this, coord);
             }
+        }
+
+        private bool isSweepedMinesAround(Coords coord) {
+            List<Coords> surrounding = GetSurroundingCoords(coord);
+
+            int counter = 0;
+            foreach (var c in surrounding) { // Count the number of flag that is flagging the mine
+                if (gridElements[c.row, c.col].type == GridElement.Type.Flag && answer[c.row, c.col] == GridElement.Type.Mine) {
+                    counter++;
+                }
+            }
+
+            return counter == (int)answer[coord.row, coord.col]; // Flag all mine arround
+        }
+
+        private void RevealSurrounding(Coords coord) {
+            List<Coords> surrounding = GetSurroundingCoords(coord);
+            surrounding.ForEach(c => ExtendConnectedEmpty(c));
         }
 
         private void SetGridElementsToAnswer() {
@@ -171,29 +171,18 @@ namespace Minesweeper
         }
 
         private void ExtendConnectedEmpty(Coords coord) {
-            if (!IsInBound(coord)) {
-                return;
-            }
-
             if (GridElement.IsNumberType(answer[coord.row, coord.col])) {
                 gridElements[coord.row, coord.col].type = answer[coord.row, coord.col];
                 return;
             }
 
-            if (answer[coord.row, coord.col] == GridElement.Type.Empty) {
+            if (answer[coord.row, coord.col] is GridElement.Type.Empty) {
                 if (gridElements[coord.row, coord.col].type != GridElement.Type.Cover) {
                     return;
                 }
 
                 gridElements[coord.row, coord.col].type = answer[coord.row, coord.col];
-                ExtendConnectedEmpty(coord + Coords.up);
-                ExtendConnectedEmpty(coord + new Coords(-1, 1));
-                ExtendConnectedEmpty(coord + Coords.right);
-                ExtendConnectedEmpty(coord + new Coords(1, 1));
-                ExtendConnectedEmpty(coord + Coords.down);
-                ExtendConnectedEmpty(coord + new Coords(1, -1));
-                ExtendConnectedEmpty(coord + Coords.left);
-                ExtendConnectedEmpty(coord + new Coords(-1, -1));
+                RevealSurrounding(coord);
             }
             return;
         }
@@ -214,6 +203,21 @@ namespace Minesweeper
                 }
                 OnGridElementTypeChanged?.Invoke(this, coord);
             }
+        }
+
+        private List<Coords> GetSurroundingCoords(Coords coord) {
+            List<Coords> list = new List<Coords>() {
+                coord + new Coords(-1, 0),
+                coord + new Coords(-1, 1),
+                coord + new Coords(0, 1),
+                coord + new Coords(1, 1),
+                coord + new Coords(1, 0),
+                coord + new Coords(1, -1),
+                coord + new Coords(0, -1),
+                coord + new Coords(-1, -1)
+            };
+            list.RemoveAll(c => !IsInBound(c));
+            return list;
         }
     }
 }

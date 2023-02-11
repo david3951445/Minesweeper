@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace Minesweeper
 {
-    class GridElement
+    public class GridElement : ICloneable
     {
         
         private Type _type;
@@ -18,12 +18,10 @@ namespace Minesweeper
                 _type = value;
             } 
         }
-        private bool isCovered;
 
         public GridElement(Type _type) {
             type = _type;
         }
-        
 
         public Image GetImage() {
             return UtilsClass.CreateImage(GetImgRelativePath(type), UriKind.Relative);
@@ -76,5 +74,10 @@ namespace Minesweeper
                     return false;
             }
         }
+
+        public object Clone() {
+            return (GridElement)MemberwiseClone();
+        }
+
     }
 }

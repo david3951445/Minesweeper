@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Minesweeper
 {
@@ -37,6 +38,48 @@ namespace Minesweeper
             Grid.SetRow(element, row);
             Grid.SetColumn(element, col);
             grid.Children.Add(element);
+        }
+
+        /// <summary>
+        /// Init 2d array with same object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array2D"></param>
+        public static void Init<T>(this T[,] array2D) where T : new() {
+            for (int i = 0; i < array2D.GetLength(0); i++) {
+                for (int j = 0; j < array2D.GetLength(1); j++) {
+                    array2D[i, j] = new T();
+                }
+            }
+        }
+        /// <summary>
+        /// Given row and col, init 2D array with same value
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="numRows"></param>
+        /// <param name="numCols"></param>
+        /// <returns></returns>
+        public static T[,] RepeatObject<T>(this T value, int numRows, int numCols) where T : ICloneable {
+            T[,] array2D = new T[numRows, numCols];
+            for (int i = 0; i < numRows; i++) {
+                for (int j = 0; j < numCols; j++) {
+                    if (value.Clone() is T t) {
+                        array2D[i, j] = t;
+                    }
+                }
+            }
+            return array2D;
+        }
+
+        public static T[,] RepeatValue<T>(this T value, int numRows, int numCols) where T : struct {
+            T[,] array2D = new T[numRows, numCols];
+            for (int i = 0; i < numRows; i++) {
+                for (int j = 0; j < numCols; j++) {
+                    array2D[i, j] = value;
+                }
+            }
+            return array2D;
         }
     }
 }
