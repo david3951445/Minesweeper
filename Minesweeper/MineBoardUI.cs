@@ -59,7 +59,7 @@ namespace Minesweeper
         }
 
 
-        private void _mineBoard_onGridElementTypeChanged(object? sender, Coords coord) {
+        private void _mineBoard_onGridElementTypeChanged(object? sender, EventArgs e) {
             // Refresh
             for (int i = 0; i < mineBoard.width; i++) {
                 for (int j = 0; j < mineBoard.width; j++) {

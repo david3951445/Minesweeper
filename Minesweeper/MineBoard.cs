@@ -14,17 +14,19 @@ namespace Minesweeper
 {
     class MineBoard 
     {
-        public int height { get; private set; } // Number of col of board
-        public int width { get; private set; } // Number of row of board
+
         private int mineCount = 10;
+        private Stack<Coords> minePositions;
         public GridElement[,] gridElements; // Store the state of elements in grid
         public GridElement.Type[,] answer; // Answer of mine board
 
         public Action? OnGameOvered;
         public Action? OnGameWinned;
         public event EventHandler<int>? OnFlagCounterChanged;
-        public event EventHandler<Coords>? OnGridElementTypeChanged;
+        public event EventHandler? OnGridElementTypeChanged;
 
+        public int height { get; private set; } // Number of col of board
+        public int width { get; private set; } // Number of row of board
         private bool _isGameOver;
         private bool isGameOver {
             get => _isGameOver;
@@ -38,9 +40,6 @@ namespace Minesweeper
             set {
                 _flagCounter = value;
                 OnFlagCounterChanged?.Invoke(this, _flagCounter);
-                if (_flagCounter == 0) {
-                    OnGameWinned?.Invoke();
-                }
             }
         }
 
@@ -49,6 +48,8 @@ namespace Minesweeper
             height = _width;
             mineCount = _mineCount;
             isGameOver = false;
+            minePositions = UtilsClass.PickRandomNumbers2D(new Coords(height, width), mineCount);
+
             answer = GridElement.Type.Empty.RepeatValue(width, height);
             GenerateAnswer();
 
@@ -56,50 +57,24 @@ namespace Minesweeper
 
         }
 
-        private void GenerateAnswer() {          
-            // Generate Mines
-            Stack<Coords> mines = UtilsClass.PickRandomNumbers2D(new Coords(height, width), mineCount);
-            while (mines.Any()) {
-                Coords mineCoord = mines.Pop();
-                //gridElements[mineCoord.row, mineCoord.col] = new GridElement(GridElement.Type.Mine);
+        private void GenerateAnswer() {
+            // Generate Mines          
+            var temp = new Stack<Coords>(new Stack<Coords>(minePositions));
+            while (temp.Any()) {
+                Coords mineCoord = temp.Pop();
                 answer[mineCoord.row, mineCoord.col] = GridElement.Type.Mine;
             }
 
             // Generate Numbers and Empty
-            for (int row = 0; row < height; row++) {
-                for (int col = 0; col < width; col++) {
-                    if (answer[row, col] != GridElement.Type.Mine) {
-                        int amount = FindNumberOfMineAround(new Coords(row, col));
-                        //gridElements[row, col] = new GridElement((GridElement.Type)amount);
-                        answer[row, col] = (GridElement.Type)amount;
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (answer[i, j] != GridElement.Type.Mine) {
+                        List<Coords> surround = GetSurroundingCoords(new Coords(i, j));
+                        int amount = surround.Count(c => answer[c.row, c.col] == GridElement.Type.Mine);
+                        answer[i, j] = (GridElement.Type)amount;
                     }
                 }
             }
-        }
-
-        private int FindNumberOfMineAround(Coords origin) {
-            Coords[] offsets = new Coords[] {
-                new Coords(-1, -1),
-                new Coords(0, -1),
-                new Coords(1, -1),
-                new Coords(1, 0),
-                new Coords(1, 1),
-                new Coords(0, 1),
-                new Coords(-1, 1),
-                new Coords(-1, 0)
-            };
-
-            int count = 0;
-            foreach (var offset in offsets) {
-                Coords coord = new Coords(origin.row + offset.row, origin.col + offset.col);
-                if (IsInBound(coord)) {
-                    if (answer[coord.row, coord.col] == GridElement.Type.Mine) {
-                        count++;
-                    }
-                }
-            }
-            
-            return count;
         }
 
         private bool IsInBound(Coords coord) {
@@ -120,41 +95,44 @@ namespace Minesweeper
                     case GridElement.Type.Six:
                     case GridElement.Type.Seven:
                     case GridElement.Type.Eight:
-                        if (isSweepedMinesAround(coord)) {
+                        int numFlags = GetSurroundingCoords(coord).Count(c => gridElements[c.row, c.col].type == GridElement.Type.Flag);
+                        if (numFlags == (int)gridElements[coord.row, coord.col].type) {
                             RevealSurrounding(coord);
                         }
                         break; 
                         
                     case GridElement.Type.Cover: // Show answer below
-                        if (answer[coord.row, coord.col] == GridElement.Type.Mine) {
-                            SetGridElementsToAnswer();
-                            isGameOver = true;
-                            OnGameOvered?.Invoke();
-                        }
-                        else {
-                            ExtendConnectedEmpty(coord);
-                        }          
+                        ExtendConnectedEmpty(coord);
                         break;
 
                     default:
                         break;
                 }
 
-                OnGridElementTypeChanged?.Invoke(this, coord);
+                OnGridElementTypeChanged?.Invoke(this, EventArgs.Empty);
+            }
+
+            if (IsWinned()) {
+                OnGameWinned?.Invoke();
             }
         }
 
-        private bool isSweepedMinesAround(Coords coord) {
-            List<Coords> surrounding = GetSurroundingCoords(coord);
-
-            int counter = 0;
-            foreach (var c in surrounding) { // Count the number of flag that is flagging the mine
-                if (gridElements[c.row, c.col].type == GridElement.Type.Flag && answer[c.row, c.col] == GridElement.Type.Mine) {
-                    counter++;
+        bool IsWinned() { // Winning condition
+            bool isWinned = true;
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (gridElements[i, j].type == GridElement.Type.Cover && answer[i, j] != GridElement.Type.Mine) {
+                        Trace.WriteLine(i + ", " + j);
+                        isWinned = false;
+                    }
                 }
             }
+            Trace.WriteLine(isWinned);
+            return isWinned;
+        }
 
-            return counter == (int)answer[coord.row, coord.col]; // Flag all mine arround
+        private bool IsCoveredMine(Coords c) { // Is this coord is a covered mine
+            return gridElements[c.row, c.col].type == GridElement.Type.Cover && answer[c.row, c.col] == GridElement.Type.Mine;
         }
 
         private void RevealSurrounding(Coords coord) {
@@ -171,6 +149,12 @@ namespace Minesweeper
         }
 
         private void ExtendConnectedEmpty(Coords coord) {
+            if (IsCoveredMine(coord)) {
+                SetGridElementsToAnswer();
+                isGameOver = true;
+                OnGameOvered?.Invoke();
+            }
+
             if (GridElement.IsNumberType(answer[coord.row, coord.col])) {
                 gridElements[coord.row, coord.col].type = answer[coord.row, coord.col];
                 return;
@@ -201,7 +185,7 @@ namespace Minesweeper
                     default:
                         break;
                 }
-                OnGridElementTypeChanged?.Invoke(this, coord);
+                OnGridElementTypeChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 

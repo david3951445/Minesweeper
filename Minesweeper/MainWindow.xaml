@@ -26,12 +26,12 @@
         </StackPanel>
         <StackPanel Margin="400,5,330,39" Background="#FFA7A7A7" >
             <TextBlock Text="Time" Background="#FF6B6B6B" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White"/>
-            <TextBox x:Name="timeTextBox" TextAlignment="Center" TextWrapping="Wrap" Text="0s" Width="32" Background="#FF6B6B6B" Foreground="White"/>
+            <TextBox x:Name="timeTextBox" TextAlignment="Center" TextWrapping="Wrap" Text="0s" Width="36" Background="#FF6B6B6B" Foreground="White"/>
         </StackPanel>
         <TextBox x:Name="gameMessageTextBox" HorizontalAlignment="Left" Margin="400,75,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="110" Height="20" Background="#FF8E8E8E" Foreground="White"/>
         <StackPanel Margin="475,5,255,39" Background="#FFA7A7A7" >
             <TextBlock Background="#FF6B6B6B" Margin="5" FontSize="16" HorizontalAlignment="Center" Foreground="White" Text="Flag"/>
-            <TextBox x:Name="flagTextBox" TextAlignment="Center" TextWrapping="Wrap" Text="?" Width="32" Background="#FF6B6B6B" Foreground="White"/>
+            <TextBox x:Name="flagTextBox" TextAlignment="Center" TextWrapping="Wrap" Text="?" Width="36" Background="#FF6B6B6B" Foreground="White"/>
         </StackPanel>
     </Grid>
 </Window>
