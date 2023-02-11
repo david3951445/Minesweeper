@@ -70,11 +70,6 @@ namespace Minesweeper
                     }
                 }
             }
-
-            //if (grid.GetChild(e.coord.row, e.coord.col) is Image image) {
-            //    string path = GridElement.GetImgRelativePath(mineBoard.answer[e.coord.row, e.coord.col]);
-            //    image.Source = UtilsClass.GetBitmapImage(path, UriKind.Relative);
-            //}
         }
 
         private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {

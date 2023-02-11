@@ -52,6 +52,7 @@ namespace Minesweeper
                 }
             }
         }
+
         /// <summary>
         /// Given row and col, init 2D array with same value
         /// </summary>
@@ -72,6 +73,14 @@ namespace Minesweeper
             return array2D;
         }
 
+        /// <summary>
+        /// Given row and col, init 2D array with same value
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="numRows"></param>
+        /// <param name="numCols"></param>
+        /// <returns></returns>
         public static T[,] RepeatValue<T>(this T value, int numRows, int numCols) where T : struct {
             T[,] array2D = new T[numRows, numCols];
             for (int i = 0; i < numRows; i++) {

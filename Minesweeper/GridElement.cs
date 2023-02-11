@@ -9,8 +9,7 @@ using System.Windows.Controls;
 namespace Minesweeper
 {
     public class GridElement : ICloneable
-    {
-        
+    {       
         private Type _type;
         public Type type {
             get => _type;
@@ -44,6 +43,7 @@ namespace Minesweeper
                 default: throw new Exception("No such grid element type");
             }
         }
+
         public enum Type
         {
             Empty,
@@ -59,6 +59,7 @@ namespace Minesweeper
             Mine,
             Cover
         }
+
         public static bool IsNumberType(Type type) {
             switch (type) {
                 case Type.One:
@@ -78,6 +79,5 @@ namespace Minesweeper
         public object Clone() {
             return (GridElement)MemberwiseClone();
         }
-
     }
 }
