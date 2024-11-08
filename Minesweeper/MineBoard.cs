@@ -20,8 +20,8 @@ namespace Minesweeper
         public GridElement[,] gridElements; // Store the state of elements in grid
         public GridElement.Type[,] answer; // Answer of mine board
 
-        public Action? OnGameOvered;
-        public Action? OnGameWinned;
+        public event EventHandler? OnGameOvered;
+        public event EventHandler? OnGameWinned;
         public event EventHandler<int>? OnFlagCounterChanged;
         public event EventHandler? OnGridElementTypeChanged;
 
@@ -113,7 +113,7 @@ namespace Minesweeper
             }
 
             if (IsWinned()) {
-                OnGameWinned?.Invoke();
+                OnGameWinned?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -152,7 +152,7 @@ namespace Minesweeper
             if (IsCoveredMine(coord)) {
                 SetGridElementsToAnswer();
                 isGameOver = true;
-                OnGameOvered?.Invoke();
+                OnGameOvered?.Invoke(this, EventArgs.Empty);
             }
 
             if (GridElement.IsNumberType(answer[coord.row, coord.col])) {

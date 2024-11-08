@@ -1,45 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Minesweeper.App" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+  <Class Name="Minesweeper.GridElement" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="1.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Minesweeper.GridElement.Type">
+        <TypeIdentifier>
+          <NewMemberFileName>GridElement.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>App.xaml.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Minesweeper.GridElement" Collapsed="true">
-    <Position X="2.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAQAAABAAEAAAAAQAAAABA=</HashCode>
       <FileName>GridElement.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Minesweeper.GridElementUI" Collapsed="true">
-    <Position X="4" Y="0.5" Width="1.5" />
+  <Class Name="Minesweeper.MainWindow" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQAAAAAAEAAAAAAAEAAEAAAIAAAAAAAAAAA=</HashCode>
-      <FileName>GridElementUI.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Minesweeper.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="0.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAkCAAAAAAAgAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <HashCode>EAECAAAAAAAgAAgBAAAAAAAAAAAAAAAAAAAAQAAAAAE=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Minesweeper.UtilsClass" Collapsed="true">
-    <Position X="2.25" Y="1.5" Width="1.5" />
+  <Class Name="Minesweeper.MineBoard">
+    <Position X="1.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAhAAIgAEECSEUAgIgACAAAAQAAAAAAIABAgAAAI=</HashCode>
+      <FileName>MineBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Minesweeper.MineBoardUI">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAACCAAQIAAAABAAQAAAAAABAAAAAAAgAAAAAAAAg=</HashCode>
+      <FileName>MineBoardUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Minesweeper.MyExtension">
+    <Position X="8.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAIgAAAAAAAAAAAAAAACAAAAQAA=</HashCode>
+      <FileName>MyExtension.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Minesweeper.UtilsClass">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CQAAAAABAAAAAAAgAAAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UtilsClass.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="Minesweeper.Coords" Collapsed="true">
-    <Position X="0.5" Y="2.75" Width="1.5" />
+    <Position X="8.25" Y="5.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEQAAAAQACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAIAAACAAAEQAAAAQACAAAIAAAAAAAAAgAAgAA=</HashCode>
       <FileName>Coords.cs</FileName>
     </TypeIdentifier>
   </Struct>

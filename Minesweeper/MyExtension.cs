@@ -54,7 +54,7 @@ namespace Minesweeper
         }
 
         /// <summary>
-        /// Given row and col, init 2D array with same value
+        /// Given number of rows and columns, return 2D array with the object
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>

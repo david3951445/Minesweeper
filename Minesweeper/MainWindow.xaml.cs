@@ -57,8 +57,8 @@ namespace Minesweeper
 
             // Create mine board
             mineBoard = new MineBoard(boardSize, mineCount);
-            mineBoard.OnGameOvered += () => gameMessageTextBox.Text = "Game Over!"; // Disable the board when game over
-            mineBoard.OnGameWinned += () => gameMessageTextBox.Text = "Game Win!";
+            mineBoard.OnGameOvered += (sender, e) => gameMessageTextBox.Text = "Game Over!"; // Disable the board when game over
+            mineBoard.OnGameWinned += (sender, e) => gameMessageTextBox.Text = "Game Win!";
             mineBoard.OnFlagCounterChanged += (object? sender, int num) => flagTextBox.Text = num.ToString();
             mineBoard.flagCounter = mineCount;
             mineBoardUI = new MineBoardUI(mineBoard);
